@@ -9,4 +9,18 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
+  def self.new_access_token
+    SecureRandom.urlsafe_base64
+  end
+
+  def self.digest(token)
+    Digest::SHA1.hexdigest(token.to_s)
+  end
+
+
+  private
+    def create_access_token
+      self.access_token = User.digest(User.new_access_token)
+    end
+
 end
